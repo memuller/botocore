@@ -29,6 +29,7 @@ from botocore.compat import (
     urlsplit,
     urlunsplit,
 )
+
 from botocore.exceptions import UnseekableStreamError
 
 logger = logging.getLogger(__name__)
@@ -253,6 +254,12 @@ def prepare_request_dict(request_dict, endpoint_url, context=None,
         headers = r['headers']
         headers['User-Agent'] = user_agent
     host_prefix = r.get('host_prefix')
+
+    # TODO: BETTER HANDLE THE CUSTOM DOMAIN CASE     
+    endpoint_url_domain = urlparse(endpoint_url).netloc        
+    if endpoint_url_domain in r['url_path']:         
+        r['url_path'] = r['url_path'].replace('/{}'.format(endpoint_url_domain), '')
+     
     url = _urljoin(endpoint_url, r['url_path'], host_prefix)
     if r['query_string']:
         # NOTE: This is to avoid circular import with utils. This is being
