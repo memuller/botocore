@@ -255,9 +255,13 @@ def prepare_request_dict(request_dict, endpoint_url, context=None,
     host_prefix = r.get('host_prefix')
 
     # TODO: BETTER HANDLE THE CUSTOM DOMAIN CASE     
-    endpoint_url_domain = urlparse(endpoint_url).netloc        
-    if endpoint_url_domain in r['url_path']:         
-        r['url_path'] = r['url_path'].replace('/{}'.format(endpoint_url_domain), '')
+#     endpoint_url_domain = urlparse(endpoint_url).netloc        
+#     if endpoint_url_domain in r['url_path']:         
+#         r['url_path'] = r['url_path'].replace('/{}'.format(endpoint_url_domain), '')
+    if 'staging' in endpoint_url_domain:
+        r['url_path'] = r['url_path'].replace('/storage.staging.usefabriq.com', '')   
+    else: 
+        r['url_path'] = r['url_path'].replace('/storage.usefabriq.com', '')  
      
     url = _urljoin(endpoint_url, r['url_path'], host_prefix)
     if r['query_string']:
